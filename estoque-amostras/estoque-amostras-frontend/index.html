@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - Estoque de Amostras</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      background-color: #f8f9fa;
+    }
+    /* Sidebar */
+    #sidebar {
+      width: 220px;
+      background-color: #212529;
+      color: white;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+    #sidebar h4 {
+      margin-bottom: 2rem;
+      font-weight: 700;
+      color: #0d6efd;
+      text-align: center;
+    }
+    #sidebar a {
+      color: #adb5bd;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+    /* Content */
+    #content {
+      margin-left: 220px;
+      width: calc(100% - 220px);
+      padding: 1.5rem 2rem;
+    }
+
+    /* Topbar */
+    #topbar {
+      height: 60px;
+      background-color: white;
+      border-bottom: 1px solid #dee2e6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+    }
+    #topbar h2 {
+      margin: 0;
+      color: #0d6efd;
+      font-weight: 700;
+    }
+    
+
+    /* Card styling */
+    .card-header.bg-success {
+      background-color: #198754 !important;
+    }
+    .card-header.bg-primary {
+      background-color: #0d6efd !important;
+    }
+
+    /* Botão no topbar */
+    #topbar a.btn {
+      font-weight: 600;
+    }
+
+    /* Tabela */
+    table.table thead {
+      background-color: #e9ecef;
+    }
+    table.table tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+
+    /* Status editável */
+    .status-editable {
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 0.25rem;
+      background-color: #e7f1ff;
+      color: #0d6efd;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+    .status-editable:hover {
+      background-color: #cfe2ff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <nav id="sidebar" aria-label="Sidebar navigation">
+    <h4>Meu Dashboard</h4>
+    <a href="dashboard.html" >🏠 Dashboard</a>
+    <a href="index.html" class="active">📦 Estoque</a>
+    <a href="relatorio.html">📊 Relatórios</a>
+
+  
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <div id="content">
+    <!-- Topbar -->
+    <div id="topbar">
+      <h2>Estoque - Engenharia de Inovação</h2>
+      <a href="dashboard.html" class="btn btn-outline-primary">⬅ Voltar</a>
+    </div>
+
+    <!-- Formulário -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-success text-white">Nova Amostra</div>
+      <div class="card-body">
+        <form id="amostraForm">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <input type="text" class="form-control" name="codigo_produto" placeholder="Código do Produto" required />
+            </div>
+            <div class="col-md-3">
+              <input type="text" class="form-control" name="nome_produto" placeholder="Nome do Produto" required />
+            </div>
+            <div class="col-md-3">
+              <input type="number" class="form-control" name="quantidade" placeholder="Quantidade" required />
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" name="numero_estoque" required>
+                <option value="" disabled selected>Número do Estoque</option>
+                <option value="85">85</option>
+                <option value="87">87</option>
+                <option value="09">09</option>
+                <option value="99">99</option>
+                <option value="16">16</option>
+                <option value="80">80</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <select class="form-select" name="categoria" required>
+                <option value="" disabled selected>Categoria</option>
+                <option value="CBU">CBU</option>
+                <option value="CBA - CERTIFICAÇÃO">CBA - CERTIFICAÇÃO</option>
+                <option value="CBA - SOFTWARE">CBA - SOFTWARE</option>
+                <option value="CBA - NPI">CBA - NPI</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" name="fornecedor" placeholder="Fornecedor" required />
+            </div>
+            <div class="col-md-4">
+              <input type="date" class="form-control" name="data_entrada" required />
+            </div>
+
+            <div class="col-md-4">
+              <input type="text" class="form-control" name="status" placeholder="Status" required />
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" name="responsavel" placeholder="Responsável" required />
+            </div>
+            <div class="col-md-4">
+              <input type="text" class="form-control" name="descricao" placeholder="Descrição do Produto" />
+            </div>
+            <div class="col-md-12">
+              <textarea class="form-control" name="observacoes" placeholder="Observações" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="mt-3 text-end">
+            <button type="submit" class="btn btn-success px-4">Cadastrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">Lista de Amostras</div>
+      <div class="card-body table-responsive">
+        <table
+          class="table table-bordered table-hover align-middle text-center"
+          id="tabelaAmostras"
+        >
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th>Qtde</th>
+              <th>Estoque</th>
+              <th>Categoria</th>
+              <th>Fornecedor</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Responsável</th>
+              <th>Descrição</th>
+              <th>Obs</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('amostraForm');
+    const tabela = document.querySelector('#tabelaAmostras tbody');
+
+    function getAmostras() {
+      return JSON.parse(localStorage.getItem('amostras')) || [];
+    }
+
+    function salvarAmostras(amostras) {
+      localStorage.setItem('amostras', JSON.stringify(amostras));
+    }
+
+    function carregarAmostras() {
+      const dados = getAmostras();
+      tabela.innerHTML = '';
+      dados.forEach((amostra, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${amostra.codigo_produto}</td>
+          <td>${amostra.nome_produto}</td>
+          <td>${amostra.quantidade}</td>
+          <td>${amostra.numero_estoque}</td>
+          <td>${amostra.categoria}</td>
+          <td>${amostra.fornecedor}</td>
+          <td>${amostra.data_entrada}</td>
+          <td><span class="status-editable" onclick="editarStatus(${index}, this)">${amostra.status}</span></td>
+          <td>${amostra.responsavel}</td>
+          <td>${amostra.descricao || ''}</td>
+          <td>${amostra.observacoes || ''}</td>
+          <td>
+            <button class="btn btn-sm btn-danger mb-1" onclick="deletarAmostra(${index})">🗑</button>
+            <button class="btn btn-sm btn-warning" onclick="retirarAmostra(${index})">➖</button>
+          </td>
+        `;
+        tabela.appendChild(tr);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const dados = Object.fromEntries(formData.entries());
+      dados.quantidade = parseInt(dados.quantidade);
+      const amostras = getAmostras();
+      amostras.push(dados);
+      salvarAmostras(amostras);
+      form.reset();
+      carregarAmostras();
+    });
+
+    function deletarAmostra(index) {
+      if (confirm('Deseja excluir esta amostra?')) {
+        const amostras = getAmostras();
+        amostras.splice(index, 1);
+        salvarAmostras(amostras);
+        carregarAmostras();
+      }
+    }
+
+    function retirarAmostra(index) {
+      const quantidadeRetirar = prompt('Quantidade a retirar:');
+      const qtd = parseInt(quantidadeRetirar);
+      if (!isNaN(qtd) && qtd > 0) {
+        const amostras = getAmostras();
+        if (amostras[index].quantidade >= qtd) {
+          amostras[index].quantidade -= qtd;
+          salvarAmostras(amostras);
+          carregarAmostras();
+        } else {
+          alert('Quantidade insuficiente.');
+        }
+      }
+    }
+
+    function editarStatus(index, elemento) {
+      const novoStatus = prompt('Novo status:', elemento.textContent);
+      if (novoStatus !== null) {
+        const amostras = getAmostras();
+        amostras[index].status = novoStatus;
+        salvarAmostras(amostras);
+        carregarAmostras();
+      }
+    }
+
+    carregarAmostras();
+  </script>
+
+</body>
+</html>

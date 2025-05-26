@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Relatório de Amostras</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { background-color: #f8f9fa; }
+    h2 { color: #0d6efd; }
+    table th, table td { text-align: center; }
+    body {
+        
+      
+       flex-direction: column;
+      display: flex;
+      background-color: #f8f9fa;
+    }
+    /* Sidebar */
+    #sidebar {
+      width: 220px;
+      background-color: #212529;
+      color: white;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+    #sidebar h4 {
+      margin-bottom: 2rem;
+      font-weight: 700;
+      color: #0d6efd;
+      text-align: center;
+    }
+    #sidebar a {
+      color: #adb5bd;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+    /* Content */
+    #content {
+      margin-left: 220px;
+      width: calc(100% - 220px);
+      padding: 1.5rem 2rem;
+    }
+
+    /* Topbar */
+    #topbar {
+      height: 60px;
+      background-color: white;
+      border-bottom: 1px solid #dee2e6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+    }
+    #topbar h2 {
+      margin: 0;
+      color: #0d6efd;
+      font-weight: 700;
+    }
+    
+
+    /* Card styling */
+    .card-header.bg-success {
+      background-color: #198754 !important;
+    }
+    .card-header.bg-primary {
+      background-color: #0d6efd !important;
+    }
+
+    /* Botão no topbar */
+    #topbar a.btn {
+      font-weight: 600;
+    }
+
+    /* Tabela */
+    table.table thead {
+      background-color: #e9ecef;
+    }
+    table.table tbody tr:hover {
+      background-color: #f1f3f5;
+    }
+
+    /* Status editável */
+    .status-editable {
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 0.25rem;
+      background-color: #e7f1ff;
+      color: #0d6efd;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+    .status-editable:hover {
+      background-color: #cfe2ff;
+    }
+    .box{
+        padding: 5rem;
+        margin-left: 10%;
+    }
+ 
+  </style>
+</head>
+<body>
+    <nav id="sidebar" aria-label="Sidebar navigation">
+    <h4>Meu Dashboard</h4>
+    <a href="dashboard.html" >🏠 Dashboard</a>
+    <a href="index.html" >📦 Estoque</a>
+    <a href="relatorio.html" class="active">📊 Relatórios</a>
+
+    
+  </nav>
+<div class="box">
+  <h2>Relatório de Amostras</h2>
+  <button class="btn btn-success mb-3" onclick="exportarExcel()">⬇ Exportar para Excel</button>
+  <div class="table-responsive">
+    <table class="table table-bordered" id="tabelaRelatorio">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nome</th>
+          <th>Qtde</th>
+          <th>Estoque</th>
+          <th>Categoria</th>
+          <th>Fornecedor</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Responsável</th>
+          <th>Descrição</th>
+          <th>Obs</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+  <script>
+    function getAmostras() {
+      return JSON.parse(localStorage.getItem('amostras')) || [];
+    }
+
+    function carregarRelatorio() {
+      const tbody = document.querySelector('#tabelaRelatorio tbody');
+      const dados = getAmostras();
+      tbody.innerHTML = '';
+      dados.forEach(amostra => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${amostra.codigo_produto}</td>
+          <td>${amostra.nome_produto}</td>
+          <td>${amostra.quantidade}</td>
+          <td>${amostra.numero_estoque}</td>
+          <td>${amostra.categoria}</td>
+          <td>${amostra.fornecedor}</td>
+          <td>${amostra.data_entrada}</td>
+          <td>${amostra.status}</td>
+          <td>${amostra.responsavel}</td>
+          <td>${amostra.descricao || ''}</td>
+          <td>${amostra.observacoes || ''}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportarExcel() {
+      const tabela = document.getElementById("tabelaRelatorio");
+      const wb = XLSX.utils.table_to_book(tabela, { sheet: "Relatório" });
+      XLSX.writeFile(wb, "relatorio_amostras.xlsx");
+    }
+
+    carregarRelatorio();
+  </script>
+</body>
+</html>
